@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>objX</title>
+        <meta name="description" content="">
+<!--        <link rel="stylesheet" href="main.css">-->
+        <style>
+            html{
+                background-color: white;
+            }
+            body{
+                position: relative;
+                //margin: 0 auto;
+                background-color: #333;
+                padding: 30px;
+                width: 1024px;
+                left: 50%;
+                margin-left: -512px;
+                height: 500px;
+                font-family: verdana;
+                color: #ddd;
+            }
+            #block{
+                position: absolute;
+                left: 0;
+                //margin-left: -25px;
+                top: 0;
+                //margin-top: -25px;
+                width: 50px;
+                height: 50px;
+                display: block;
+                background-color: white;
+                opacity: .3;
+                -webkit-transition: .25s;
+    transition: .25s;
+            }
+            
+            #block:hover{
+                cursor: pointer;
+            }
+            
+            table, tr, td {
+                border-collapse: collapse;
+                border: solid 1px white;
+            }
+            
+            tr{
+                height: 50px;
+            }
+            
+            td{
+                width: 50px;
+            }
+            
+            table{
+                position: absolute;
+                width: 150px;
+            }
+           
+            
+            
+        </style>
+    </head>
+    <body>
+        <div id="block" data-movement = "random" onclick="move()"></div>
+       
+        <p id="value">origin</p>
+        <p id="key">-</p>
+        <table>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+    
+    </body>
+     <script>
+         
+         (function(){
+            var bw = document.getElementsByTagName("body")[0].clientWidth/2;
+            var bh = document.getElementsByTagName("body")[0].clientHeight/2;
+            document.getElementById("block").style.left = bw-25+"px";
+            document.getElementById("block").style.top = bh-25+"px";
+        })();
+         
+         
+            //=====keyboard interaction=============================================
+            document.addEventListener("keydown", keypressed, false);
+            
+            var keyCode;
+            var display = document.getElementById("value");
+            
+            function keypressed(e) {
+                keyCode = e.keyCode;
+                curX = Math.floor(document.getElementById("block").offsetLeft);
+                curY = Math.floor(document.getElementById("block").offsetTop);
+                if(keyCode==37) {
+                    document.getElementById("key").innerHTML = "right";
+                    //hint: cannot use center combo
+                    if (curX > 50) {
+                        document.getElementById("block").style.left = curX - increment +"px";
+                    }
+                } else if(keyCode==38) {
+                    document.getElementById("key").innerHTML = "up";
+                    //hint: cannot use center combo
+                    if (curY > 50) {
+                        document.getElementById("block").style.top = curY - increment +"px";
+                    }
+                } else if(keyCode==39) {
+                    document.getElementById("key").innerHTML = "right";
+                    //hint: cannot use center combo
+                    if (curX < 1000) {
+                        document.getElementById("block").style.left = curX + increment +"px";
+                    }
+                } else if(keyCode==40) {
+                    document.getElementById("key").innerHTML = "down";
+                    //hint: cannot use center combo
+                    if (curY < 450) {
+                        document.getElementById("block").style.top = curY + increment +"px";
+                    }
+                }
+                //move(keyCode);
+                obj.setAttribute("data-movement", keyCode);
+                display.innerHTML = curX+" , "+curY;
+            }
+            //=====mouse interaction=============================================
+            var objX;
+            var objY;
+            var obj = document.getElementById("block");
+            function move() {
+                var movement = obj.getAttribute("data-movement");
+                console.log(movement);
+                switch(movement) {
+                    case "37":
+                        objX = document.getElementById("block").offsetLeft;
+                        console.log(objX);
+                        document.getElementById("block").style.left = objX - increment + "px";
+                        obj.setAttribute("data-movement", 37);
+                        break;
+                    case "38":
+                        objY = document.getElementById("block").offsetTop;
+                        document.getElementById("block").style.top = objY - increment + "px";
+                        obj.setAttribute("data-movement", 38);
+                        break;
+                    case "39":
+                        objX = document.getElementById("block").offsetLeft;
+                        document.getElementById("block").style.left = objX + increment + "px";
+                        obj.setAttribute("data-movement", 39);
+                        break;
+                    case "40":
+                        objY = document.getElementById("block").offsetTop;
+                        document.getElementById("block").style.top = objX + increment + "px";
+                        obj.setAttribute("data-movement", 40);
+                        break;
+                    case "random":
+                        console.log("break2")
+                        objY = document.getElementById("block").offsetTop;
+                        document.getElementById("block").style.top = objY + increment + "px";
+                        
+                        break;
+                }
+            } //keypressed ends
+            
+            var display;
+            var newObjX;
+            var newObjY;
+            var increment = 50;
+            var curX;
+            var curY;
+            function updatePos(pos, direction, keyCode) {
+                display = document.getElementById("value");
+                curX = document.getElementById("block").offsetLeft;
+                curY = document.getElementById("block").offsetTop;
+                newObjX = curX + increment*direction+"px";
+                newObjY = curY + increment*direction+"px";
+                console.log("curX = "+curX+"..."+"newObjX = "+newObjX);
+                //left and right
+                if (keyCode == 37 || keyCode == 39) {
+                    console.log(curX > 100);
+                    if (250 < curX < 1000) {
+                        document.getElementById("block").style.left = newObjX;
+                    }
+                } else if (keyCode == 38 || keyCode == 40) {
+                    if (50 < curY < 500) {
+                        document.getElementById("block").style.top = newObjY;
+                        //display.innerHTML = "top = "+newObjX;
+                    }
+                }
+                    
+                 
+                display.innerHTML = curX+" , "+curY;
+                
+                
+            }
+        </script>
+</html>
