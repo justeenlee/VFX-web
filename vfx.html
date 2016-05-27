@@ -15,11 +15,11 @@
                 position: relative;
                 //margin: 0 auto;
                 background-color: #333;
-                padding: 30px;
-                width: 1024px;
-                left: 50%;
-                margin-left: -512px;
+                //padding: 30px;
+                width: 1000px;
                 height: 500px;
+                left: 50%;
+                margin-left: -500px;
                 font-family: verdana;
                 color: #ddd;
             }
@@ -42,33 +42,57 @@
                 cursor: pointer;
             }
             
-            table, tr, td {
-                border-collapse: collapse;
-                border: solid 1px white;
-            }
-            
-            tr{
-                height: 50px;
-            }
-            
-            td{
+            rect {
+                background-color: red;
+                fill: #fff;
                 width: 50px;
-            }
-            
-            table{
+                height: 50px;
+                z-index: 100;
                 position: absolute;
-                width: 150px;
+                left: 0;
+                right: 0;
+                opacity: .5;
             }
-           
             
+            svg{
+                width: 100px;
+                height: 100px;
+            }
+            
+            #grid{
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                //background-color: aqua;
+                //opacity: .3;
+                left: 0;
+                top: 0;
+            }
+            
+            .vertical {
+                //width: 10px;
+                //height: 500px;
+                position: relative;
+                z-index: 10;
+                left: 0;
+                top: 0;
+                stroke: grey;
+                stroke-width: 1;
+            }
             
         </style>
     </head>
     <body>
+        <svg>
+              <rect id="block2"/>
+        </svg>
         <div id="block" data-movement = "random" onclick="move()"></div>
-       
+
+        <svg id = "grid"></svg><!--grid ends-->
+
         <p id="value">origin</p>
         <p id="key">-</p>
+        
         <table>
           <tr>
             <td></td>
@@ -95,8 +119,34 @@
             var bh = document.getElementsByTagName("body")[0].clientHeight/2;
             document.getElementById("block").style.left = bw-25+"px";
             document.getElementById("block").style.top = bh-25+"px";
+            createGrid();
         })();
-         
+            function createGrid(){
+                var svgNS = "http://www.w3.org/2000/svg"; 
+                var grid = document.getElementById("grid");
+                var startingX = 50;
+                for (i = 0; i < 19; i++) {
+                    //g = document.createElement("svg");
+                    //b.appendChild(g);
+                    var vertical = document.createElementNS(svgNS, "line");
+                    vertical.setAttributeNS(null,"x1", 50*(i+1));
+                    vertical.setAttributeNS(null,"y1", 0);
+                    vertical.setAttributeNS(null,"x2", 50*(i+1));
+                    vertical.setAttributeNS(null,"y2", 500);
+                    vertical.setAttributeNS(null,"class", "vertical");
+                    grid.appendChild(vertical);
+                    
+                    var horizontal = document.createElementNS(svgNS, "line");
+                    horizontal.setAttributeNS(null,"x1", 0);
+                    horizontal.setAttributeNS(null,"y1", 50*(i+1));
+                    horizontal.setAttributeNS(null,"x2", 1000);
+                    horizontal.setAttributeNS(null,"y2", 50*(i+1));
+                    horizontal.setAttributeNS(null,"class", "vertical");
+                    grid.appendChild(horizontal);
+                    
+                }
+            }
+            
          
             //=====keyboard interaction=============================================
             document.addEventListener("keydown", keypressed, false);
@@ -108,11 +158,13 @@
                 keyCode = e.keyCode;
                 curX = Math.floor(document.getElementById("block").offsetLeft);
                 curY = Math.floor(document.getElementById("block").offsetTop);
+                curX = Math.floor(document.getElementById("block")
                 if(keyCode==37) {
                     document.getElementById("key").innerHTML = "right";
                     //hint: cannot use center combo
                     if (curX > 50) {
                         document.getElementById("block").style.left = curX - increment +"px";
+                        document.getElementById("block2").setAttribute("x", );
                     }
                 } else if(keyCode==38) {
                     document.getElementById("key").innerHTML = "up";
